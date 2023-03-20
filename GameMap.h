@@ -2,45 +2,49 @@
 #define GAMEMAP_H_INCLUDED
 
 #include <map>
-using CubeID=unsigned int;
-struct Cube
-{
-    CubeID ci;
-};
+using BlockID=unsigned int;
 struct Block
 {
+    BlockID ci;
+};
+struct Chunk
+{
 public:
-    Block()
+    Chunk()
         :data(nullptr)
     {}
-    Block(Block const &other)
+    explicit Chunk(Chunk const &other)
     {
-        if(this->data&&other.data!=this->data)
-        {
+        if(Init())
             for(int i=0;i<16*16;i++)
                 (this->data)[i]=(other.data)[i];
-        }
     }
-    Block& operator=(const Block &other)
+    Chunk& operator=(const Chunk &other)
     {
-        if(other.data==this->data||!this->data)
+        if(other.data==this->data)
         {
             return *this;
+        }
+        if(!this->data)
+        {
+            if(!Init())
+                return *this;//nullptr
         }
         for(int i=0;i<16*16;i++)
             (this->data)[i]=(other.data)[i];
         return *this;
     }
-    ~Block()
+    ~Chunk()
     {
-        if(!data)
+        if(data)
             delete[] data;
     }
     bool Init()
     {
+        if(data!=nullptr)return false;
         try
         {
-            data=new Cube[16*16];
+            data=new Block[16*16];
         }
         catch(...)
         {
@@ -49,18 +53,27 @@ public:
         }
         return true;
     }
-    Cube Get(int x,int y)const
+    Block Get(int x,int y)const
     {
         return data[x*16+y];
     }
-    void Set(int x,int y,Cube c)
+    void Set(int x,int y,Block c)
     {
         data[x*16+y]=c;
     }
-    Cube* data;
+    Block* data;
+};
+struct ChunkCoordinate
+{
+    unsigned int x,y;
 };
 struct GameMap
 {
-    //fuck!!!
+    GameMap()
+    {}
+    ~GameMap()
+    {}
+private:
+    std::map<ChunkCoordinate,Chunk> _m;
 };
 #endif // GAMEMAP_H_INCLUDED
