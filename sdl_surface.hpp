@@ -28,27 +28,27 @@ struct Surface
     bool EnableColorKey(Uint32 key)
     {
         SDL_assert(surface!=nullptr);
-        retrun 0==SDL_SetColorKey(surface,SDL_TRUE,key);
+        return 0==SDL_SetColorKey(surface,SDL_TRUE,key);
     }
     bool EnableColorKey(Uint8 r,Uint8 g,Uint8 b,Uint8 a)
     {
         SDL_assert(surface!=nullptr);
-        Uint32 key=SDL_MapRGBA(r,g,b,a);
-        retrun 0==SDL_SetColorKey(surface,SDL_TRUE,key);
+        Uint32 key=SDL_MapRGBA(surface->format,r,g,b,a);
+        return 0==SDL_SetColorKey(surface,SDL_TRUE,key);
     }
     bool SetAlphaMod(Uint8 a)
     {
         SDL_assert(surface!=nullptr);
-        retrun 0==SDL_SetSurfaceAlphaMod(surface,a);
+        return 0==SDL_SetSurfaceAlphaMod(surface,a);
     }
     bool SetBlendMod(SDL_BlendMode const& mode)
     {
         SDL_assert(surface!=nullptr);
-        retrun 0==SDL_SetSurfaceBlendMode(surface,mode);
+        return 0==SDL_SetSurfaceBlendMode(surface,mode);
     }
 // TODO (WCM#1#): We need finish it!
 
-    SDL_Surface surface;
+    SDL_Surface* surface;
 };
 }
 
